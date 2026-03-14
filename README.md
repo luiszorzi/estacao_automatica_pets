@@ -13,20 +13,20 @@ Tudo ocorre de forma automática e segura, garantindo que o animal tenha sempre 
 ## ⚙️ Funcionamento do Sistema
 
 ### 💧 Bebedouro
-* Monitora continuamente o peso da tigela.
-* Ativa automaticamente a bomba quando o nível de água está baixo.
-* Desliga quando o peso programado é atingido.
-* Utiliza um tempo de estabilização para evitar leituras falsas.
+* **Acionamento por Peso:** Monitora continuamente o peso da tigela através da balança.
+* Ativa automaticamente a bomba de água somente se o peso lido estiver abaixo do nível mínimo estimado.
+* Desliga a bomba imediatamente quando a balança acusa que o peso programado foi atingido.
+* Utiliza um tempo de estabilização no código para evitar leituras falsas causadas pela oscilação da água.
 
 ### 🍖 Comedouro
-* Libera ração utilizando um servo motor.
-* Controle proporcional para atingir o peso programado da porção.
-* Verifica se ainda existe ração antes de servir novamente.
+* **Reposição sob Demanda:** Nos horários programados pelo relógio, o sistema lê a balança. O servo motor só é acionado se o peso atual na tigela estiver abaixo da porção estimada, completando apenas a quantidade que falta.
+* Libera a ração com controle proporcional, garantindo que o limite de peso da tigela seja respeitado sem transbordar.
+* Evita desperdícios e acúmulo excessivo, pois a balança "decide" se é necessário servir mais.
 
 ### 🕒 RTC
-* Mantém os horários de alimentação.
-* Permite alimentar o pet em horários programados.
-* Continua funcionando mesmo sem energia temporariamente.
+* Mantém os horários de alimentação salvos.
+* Permite alimentar o pet em horários exatos e programados.
+* Continua funcionando e contando o tempo mesmo se o sistema ficar sem energia temporariamente.
 
 ---
 
