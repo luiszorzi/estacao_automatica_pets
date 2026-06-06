@@ -67,16 +67,16 @@ const int POS_ABERTA_MAX = 35;
 const int POS_ABERTA_FINA = 25; 
 
 // HORÁRIOS DAS REFEIÇÕES
-const int HORA_REF_1_BASE = 15;
-const int MINUTO_REF_1 = 50;   
+const int HORA_REF_1_BASE = 08;
+const int MINUTO_REF_1 = 00;   
 int hora_ref_1_dinamica = HORA_REF_1_BASE;
 
-const int HORA_REF_2_BASE = 21; 
-const int MINUTO_REF_2 = 26;  
+const int HORA_REF_2_BASE = 14; 
+const int MINUTO_REF_2 = 00;  
 int hora_ref_2_dinamica = HORA_REF_2_BASE;
 
-const int HORA_REF_3_BASE = 15; 
-const int MINUTO_REF_3 = 24;  
+const int HORA_REF_3_BASE = 20; 
+const int MINUTO_REF_3 = 00;  
 int hora_ref_3_dinamica = HORA_REF_3_BASE;
 
 int ultimo_minuto_servido = -1; 
