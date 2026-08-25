@@ -7,9 +7,7 @@
 #include <HTTPClient.h>
 #include <LittleFS.h> 
 
-// ==========================================
 // MAPEAMENTO DE PINOS 
-// ==========================================
 #define DOUT_AGUA 25
 #define SCK_AGUA  14
 const int PINO_RELE = 26;
@@ -18,17 +16,12 @@ const int PINO_RELE = 26;
 #define CLK_RACAO  33
 const int PINO_SERVO = 27;
 
-// ==========================================
-// OBJETOS 
-// ==========================================
 HX711 balancaAgua;
 HX711 balancaRacao;
 Servo servoMotor;
 RTC_DS3231 rtc;
 
-// ==========================================
 // WI-FI E NUVEM 
-// ==========================================
 const char* ssid = SECRET_SSID;       
 const char* password = SECRET_PASS;  
 String apiKey = SECRET_API_KEY;        
@@ -36,9 +29,7 @@ String apiKey = SECRET_API_KEY;
 unsigned long timer_status_nuvem = 0;
 const unsigned long INTERVALO_STATUS = 900000; 
 
-// ==========================================
 // BEBEDOURO (ÁGUA) 
-// ==========================================
 float calibracao_agua = 211400.00; 
 long offset_agua = 2511;
 const float AGUA_PESO_LIGAR = 150.0;     
@@ -55,9 +46,7 @@ bool agua_verificandoCheio = false;
 unsigned long agua_timerVerificacao = 0; 
 float agua_pesoInicioEnchimento = 0; 
 
-// ==========================================
 // COMEDOURO (RAÇÃO) 
-// ==========================================
 float calibracao_racao = 235400.00; 
 long offset_racao = 166104;
 const float RACAO_PESO_TIGELA = 74.0;    
@@ -88,9 +77,7 @@ int minuto_ref_3_dinamico = MINUTO_REF_3_BASE;
 
 int ultima_hora_servida = -1; 
 
-// ==========================================
 // SETUP
-// ==========================================
 void setup() {
   Serial.begin(115200); 
   
@@ -163,9 +150,7 @@ void setup() {
   Serial.println("Sistema Iniciado! Operacao autonoma ativa.");
 }
 
-// ==========================================
 // LOOP
-// ==========================================
 void loop() {
   DateTime agora = rtc.now();
 
@@ -187,7 +172,6 @@ void loop() {
     tempo_ant = millis();
   }
 
-  // --- NOVA FUNÇÃO: ENVIA STATUS A CADA 15 MINUTOS ---
   if (millis() - timer_status_nuvem > INTERVALO_STATUS) {
     enviarStatusTempoReal(pesoAgua, pesoRacao);
     timer_status_nuvem = millis();
@@ -202,9 +186,7 @@ void loop() {
   delay(30); 
 }
 
-// ==========================================
 // LÓGICA DO BEBEDOURO
-// ==========================================
 void processarBebedouro(float pesoAtual) {
   unsigned long agora = millis();
 
@@ -279,9 +261,7 @@ void processarBebedouro(float pesoAtual) {
   }
 }
 
-// ==========================================
 // LÓGICA DO COMEDOURO
-// ==========================================
 void processarComedouro(DateTime agora, float pesoRacao) {
   if (agora.hour() == 3 && agora.minute() == 0 && agora.second() == 0) {
     hora_ref_1_dinamica = HORA_REF_1_BASE;
@@ -435,9 +415,7 @@ void liberarRacao(float peso_atual) {
   servoMotor.detach(); 
 }
 
-// ==========================================
 // FUNÇÕES DE COMUNICAÇÃO 
-// ==========================================
 
 // 1. Envia apenas quando a máquina trabalha
 void registrarEventoNaNuvem(int tipo, float quantidade_adicionada) {

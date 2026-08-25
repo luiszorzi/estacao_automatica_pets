@@ -1,185 +1,84 @@
-# 💻⚙️ Sistema Inteligente de Bebedouro e Comedouro para Pets
+# Sistema Embarcado para Alimentação e Hidratação de Pets
 
-Projeto de uma estação autônoma de alimentação e hidratação para pets utilizando o microcontrolador ESP32. O sistema monitora continuamente o peso das tigelas usando células de carga e controla automaticamente:
+Protótipo de um sistema embarcado para alimentação e hidratação automática de pets, desenvolvido com ESP32. O sistema monitora o peso das tigelas, repõe água automaticamente e libera ração nos horários programados.
 
-* o enchimento da água;
-* a liberação de ração;
-* os horários de alimentação;
-* o registro de eventos na nuvem.
+A estrutura foi construída artesanalmente com madeira e materiais acessíveis ou reaproveitados, incluindo uma garrafa PET utilizada como reservatório de ração. Não foram utilizadas impressão 3D ou peças mecânicas fabricadas sob medida.
 
-Tudo ocorre de forma automática e segura, garantindo que o animal tenha sempre água e alimento disponíveis.
+O objetivo desta versão foi desenvolver e validar uma solução funcional e de baixo custo, integrando sensores, atuadores, armazenamento local e comunicação com a nuvem.
 
----
-
-## ⚙️ Funcionamento do Sistema
-
-### 💧 Bebedouro
-
-* **Acionamento por Peso:** monitora continuamente o peso da tigela através da balança.
-* Ativa automaticamente a bomba de água somente se o peso lido estiver abaixo do nível mínimo configurado.
-* Desliga a bomba quando o peso programado é atingido.
-* Utiliza tempo de estabilização para evitar leituras falsas causadas pela movimentação da água.
-* Detecta a remoção da tigela e interrompe imediatamente o enchimento.
-
-### 🍖 Comedouro
-
-* **Reposição sob Demanda:** nos horários programados pelo relógio RTC, o sistema verifica o peso atual da tigela.
-* O servo motor é acionado apenas quando necessário, completando a quantidade de ração faltante.
-* Utiliza dosagem proporcional para evitar excesso de alimento.
-* Possui detecção de falha caso a balança não registre aumento de peso após várias tentativas.
-
-### 🕒 RTC
-
-* Mantém os horários de alimentação armazenados.
-* Permite refeições em horários exatos e programados.
-* Continua funcionando mesmo após quedas temporárias de energia graças à bateria do módulo.
-
-### ☁️ Monitoramento em Nuvem
-
-* Conecta-se à rede Wi-Fi.
-* Registra automaticamente eventos no ThingSpeak.
-* Armazena a quantidade de água e ração adicionada em cada operação.
-* Permite acompanhamento remoto através de gráficos e histórico de consumo.
-
-### 💾 Backup Offline
-
-* Caso não haja conexão com a internet ou o ThingSpeak esteja indisponível, os dados não são perdidos.
-* Os registros são armazenados localmente na memória interna do ESP32 utilizando LittleFS.
-* Os eventos são salvos em formato CSV contendo:
-
-  * data;
-  * horário;
-  * tipo do evento (ÁGUA ou RAÇÃO);
-  * quantidade adicionada.
-
----
-
-## 🛡️ Recursos de Segurança
-
-* Detecção de remoção da tigela de água.
-* Verificação de estabilização das leituras das balanças.
-* Proteção contra transbordamento.
-* Verificação da presença da tigela de ração.
-* Detecção de falhas na saída de ração.
-* Desligamento do bebedouro durante o processo de alimentação.
-
----
-
-## 📷 Esquemático do Sistema
+## Protótipo
 
 <p align="center">
-  <img src="imagens/esquematico.png" width="650">
+  <img src="imagens/prototipo.jpeg" alt="Protótipo do comedouro e bebedouro automático" width="48%">
+  <img src="imagens/prototipo-em-uso.jpeg" alt="Gato utilizando o comedouro automático" width="48%">
 </p>
 
----
+O protótipo foi testado em condições reais de uso, permitindo avaliar tanto o funcionamento do sistema eletrônico quanto a interação do animal com o equipamento.
 
-## 🛠️ Componentes Utilizados
+## Funcionalidades
 
-| Componente            | Quantidade |
-| :-------------------- | :--------: |
-| ESP32                 |      1     |
-| Módulo HX711          |      2     |
-| Células de carga      |      2     |
-| Servo motor           |      1     |
-| Módulo Relé (1 canal) |      1     |
-| Bomba de água DC      |      1     |
-| Módulo RTC DS3231     |      1     |
-| Fonte 5V externa      |      1     |
+- Reposição automática de água conforme o peso da tigela.
+- Liberação programada de ração com controle de quantidade.
+- Detecção da retirada das tigelas e proteção contra transbordamento.
+- Registro dos abastecimentos no ThingSpeak via Wi-Fi.
+- Armazenamento local no LittleFS quando não há conexão com a internet.
+- Relógio RTC para manter os horários mesmo após reinicializações ou quedas de energia.
 
----
+## Como funciona
 
-## 🔌 Ligações do Circuito
+O ESP32 recebe as leituras de duas células de carga, uma para cada tigela.
 
-### 🍖 Comedouro (Servo + Balança da Ração)
+Quando a quantidade de água fica abaixo do limite configurado, uma bomba é acionada até que o peso desejado seja atingido.
 
-**Servo Motor**
+Nos horários definidos pelo RTC, um servo motor controla a liberação da ração. O sistema utiliza o peso medido pela célula de carga para liberar apenas a quantidade necessária.
 
-| Fio do Servo       | Conexão |
-| :----------------- | :------ |
-| Sinal (Laranja)    | GPIO 27 |
-| VCC (Vermelho)     | 5V      |
-| GND (Marrom/Preto) | GND     |
+Cada abastecimento pode ser registrado no ThingSpeak. Caso não haja conexão com a internet, o evento é armazenado localmente em formato CSV no LittleFS para envio posterior.
 
-**Balança da Ração (HX711)**
+## Componentes
 
-| Pino HX711 | ESP32   |
-| :--------- | :------ |
-| VCC        | 3V3     |
-| GND        | GND     |
-| DT         | GPIO 32 |
-| SCK        | GPIO 33 |
+| Componente | Quantidade |
+| :--- | :---: |
+| ESP32 | 1 |
+| Módulo HX711 | 2 |
+| Célula de carga | 2 |
+| Servo motor | 1 |
+| Módulo relé de 1 canal | 1 |
+| Bomba de água 5 V | 1 |
+| Módulo RTC DS3231 | 1 |
+| Fonte externa 5 V | 1 |
 
-**Célula de Carga da Ração**
+Além dos componentes eletrônicos, foram utilizados madeira, recipientes metálicos, uma garrafa PET e outros materiais simples na construção da estrutura.
 
-| Fio      | HX711 |
-| :------- | :---- |
-| Vermelho | E+    |
-| Preto    | E-    |
-| Branco   | A-    |
-| Verde    | A+    |
+## Esquemático
 
-### 💧 Bebedouro (Bomba + Relé + Balança da Água)
+<p align="center">
+  <img src="imagens/esquematico.png" alt="Esquemático eletrônico do sistema" width="650">
+</p>
 
-**Relé (Controle)**
+## Ligações principais
 
-| Pino Relé | ESP32   |
-| :-------- | :------ |
-| VCC       | 5V      |
-| GND       | GND     |
-| IN        | GPIO 26 |
+| Função | Pinos do ESP32 |
+| :--- | :--- |
+| Servo motor | GPIO 27 |
+| HX711 da ração | DT 32 e SCK 33 |
+| Relé da bomba | GPIO 26 |
+| HX711 da água | DT 25 e SCK 14 |
+| RTC DS3231 | SDA 21 e SCL 22 |
 
-**Relé (Potência da Bomba)**
+> O servo, o relé e a bomba utilizam alimentação externa de 5 V. O terra (GND) da fonte e o do ESP32 devem estar conectados em comum.
 
-| Conexão           | Ligação                  |
-| :---------------- | :----------------------- |
-| COM               | Positivo (+) da fonte 5V |
-| NO                | Positivo (+) da bomba    |
-| Negativo da bomba | GND da fonte             |
+## Firmware
 
-**Balança da Água (HX711)**
+O firmware foi desenvolvido em Arduino/C++ para ESP32 e está disponível em [`firmware/Sistema_Inteligente_Pet.ino`](firmware/Sistema_Inteligente_Pet.ino).
 
-| Pino HX711 | ESP32   |
-| :--------- | :------ |
-| VCC        | 3V3     |
-| GND        | GND     |
-| DT         | GPIO 25 |
-| SCK        | GPIO 14 |
+Principais bibliotecas utilizadas: HX711, ESP32Servo, RTClib, Wire, WiFi, HTTPClient e LittleFS.
 
-### 🕒 Módulo RTC DS3231
+## Possíveis melhorias
 
-| Pino RTC | ESP32   |
-| :------- | :------ |
-| SDA      | GPIO 21 |
-| SCL      | GPIO 22 |
-| VCC      | 3V3     |
-| GND      | GND     |
+O projeto atual foi desenvolvido como um protótipo funcional. Algumas melhorias possíveis para versões futuras incluem:
 
----
-
-## 💻 Código
-
-O firmware foi desenvolvido em Arduino/C++ para ESP32.
-
-### Bibliotecas Utilizadas
-
-* HX711
-* ESP32Servo
-* RTClib
-* Wire
-* WiFi
-* HTTPClient
-* LittleFS
-
----
-
-## 📊 Fluxo de Funcionamento
-
-1. O ESP32 inicializa sensores, RTC, Wi-Fi e memória interna.
-2. As balanças monitoram continuamente o peso das tigelas.
-3. Quando necessário:
-
-   * a bomba reabastece a água;
-   * o servo libera ração.
-4. O RTC controla os horários das refeições.
-5. Os eventos são enviados ao ThingSpeak.
-6. Caso não haja internet, os dados são armazenados localmente no LittleFS.
+- Desenvolvimento de uma PCB dedicada.
+- Estrutura mecânica mais compacta e resistente.
+- Gabinete para proteção da eletrônica.
+- Interface web ou aplicativo para configuração dos horários e quantidades.
+- Atualização remota do firmware (OTA).
